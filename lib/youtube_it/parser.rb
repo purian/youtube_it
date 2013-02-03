@@ -48,7 +48,7 @@ class YouTubeIt
             :author    => author,
             :content   => entry.elements["content"].text,
             :published => entry.elements["published"].text,
-            :title     => entry.elements["title"].text,
+            :title     => entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte",
             :updated   => entry.elements["updated "].text,
             :url       => entry.elements["id"].text
           )
@@ -61,7 +61,7 @@ class YouTubeIt
         xml = REXML::Document.new(content.body)
         entry = xml.elements["entry"] || xml.elements["feed"]
         YouTubeIt::Model::Playlist.new(
-          :title         => entry.elements["title"].text,
+          :title         => entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte",
           :summary       => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
           :description   => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
           :playlist_id   => entry.elements["id"].text[/playlist([^<]+)/, 1].sub(':',''),
@@ -89,7 +89,7 @@ class YouTubeIt
       
       def parse_entry(entry)
         YouTubeIt::Model::Playlist.new(
-          :title         => entry.elements["title"].text,
+          :title         => entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte",
           :summary       => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
           :description   => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
           :playlist_id   => entry.elements["id"].text[/playlist([^<]+)/, 1].sub(':',''),
@@ -236,7 +236,7 @@ class YouTubeIt
         contacts = []
         feed.elements.each("entry") do |entry|
           temp_contact = YouTubeIt::Model::Contact.new(
-            :title    => entry.elements["title"] ? entry.elements["title"].text : nil,
+            :title    => entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte",
             :username => entry.elements["yt:username"] ? entry.elements["yt:username"].text : nil,
             :status   => entry.elements["yt:status"] ? entry.elements["yt:status"].text : nil
           )
@@ -293,7 +293,7 @@ class YouTubeIt
       
       def parse_entry(entry)
         YouTubeIt::Model::Subscription.new(
-          :title        => entry.elements["title"].text,
+          :title        => entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte",
           :id           => entry.elements["id"].text[/subscription([^<]+)/, 1].sub(':',''),
           :published    => entry.elements["published"] ? entry.elements["published"].text : nil
         )
@@ -334,7 +334,7 @@ class YouTubeIt
           end
         end
 
-        title = entry.elements["title"].text
+        title = entry.elements["title"].presnet? ? entry.elements["title"].text : "Tilte"
         html_content = entry.elements["content"] ? entry.elements["content"].text : nil
 
         # parse the author
