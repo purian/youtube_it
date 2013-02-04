@@ -62,8 +62,8 @@ class YouTubeIt
         entry = xml.elements["entry"] || xml.elements["feed"]
         YouTubeIt::Model::Playlist.new(
           :title         => entry.elements["title"].present? ? entry.elements["title"].text : "Tilte",
-          :summary       => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
-          :description   => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
+          :summary       => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).nil? ? "Summary" : (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
+          :description   => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).nil? ? "Description" : (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
           :playlist_id   => entry.elements["id"].text[/playlist([^<]+)/, 1].sub(':',''),
           :published     => entry.elements["published"] ? entry.elements["published"].text : nil,
           :response_code => content.status,
