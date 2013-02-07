@@ -84,7 +84,7 @@ class YouTubeIt
         
         playlists = []
         feed.elements.each("entry") do |entry|
-          playlists << text(entry)
+          playlists << parse_entry(entry)
         end
         return playlists
       end
