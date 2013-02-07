@@ -84,7 +84,7 @@ class YouTubeIt
         
         playlists = []
         feed.elements.each("entry") do |entry|
-          playlists << parse_entry(entry)
+          playlists << text(entry)
         end
         return playlists
       end
@@ -92,10 +92,12 @@ class YouTubeIt
       protected
       
       def parse_entry(entry)
+        value_text = (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"])
+        value_text = value_text.present? ? value_text.text : "empty"
         YouTubeIt::Model::Playlist.new(
           :title         => entry.elements["title"].present? ? entry.elements["title"].text : "Tilte",
-          :summary       => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
-          :description   => (entry.elements["summary"] || entry.elements["media:group"].elements["media:description"]).text,
+          :summary       => value_text,
+          :description   => value_text,
           :playlist_id   => entry.elements["id"].text[/playlist([^<]+)/, 1].sub(':',''),
           :published     => entry.elements["published"] ? entry.elements["published"].text : nil,
           :response_code => nil,
