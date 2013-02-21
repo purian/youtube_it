@@ -155,7 +155,7 @@ class YouTubeIt
     end
 
     def playlists(user = nil,options = {"max-results" => 50, "start-index" => 1})
-      client.playlists(user,options = {"max-results" => 50, "start-index" => 1})
+      client.playlists(user,options)
     end
 
     def add_playlist(options)
